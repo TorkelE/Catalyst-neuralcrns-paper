@@ -348,7 +348,8 @@ function make_reaction_system(ex::Expr, name)
         remake_ReactionSystem_internal(
             make_ReactionSystem_internal(rx_eq_vec, $tiv, us, $psvar; name, spatial_ivs,
                 observed = _observed, continuous_events = _continuous_events,
-                discrete_events = _discrete_events, combinatoric_ratelaws = _combinatoric_ratelaws);
+                discrete_events = _discrete_events, combinatoric_ratelaws = _combinatoric_ratelaws,
+                metadata = Dict());
             default_reaction_metadata = _default_reaction_metadata)
     end))
 end
@@ -984,7 +985,7 @@ function recursive_escape_functions!(expr::ExprValues, syms_skip = [])
     (typeof(expr) != Expr) && (return expr)
     foreach(i -> expr.args[i] = recursive_escape_functions!(expr.args[i], syms_skip),
         1:length(expr.args))
-    if (expr.head == :call) && (expr.args[1] isa Symbol) &&!isdefined(Catalyst, expr.args[1]) && 
+    if (expr.head == :call) && (expr.args[1] isa Symbol) &&!isdefined(Catalyst, expr.args[1]) &&
             expr.args[1] ∉ syms_skip
         expr.args[1] = esc(expr.args[1])
     end
